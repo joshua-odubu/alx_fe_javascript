@@ -1,23 +1,80 @@
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Quote Generator</title>
-  </head>
-  <body>
-    <h1>Dynamic Quote Generator</h1>
-    <div id="quoteDisplay"></div>
-    <br>
-    <button id="newQuote">Show New Quote</button>
-    
-    <br><br>
-    <div>
-      <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-      <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-      <button onclick="addQuote()">Add Quote</button>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Quote Generator</title>
+  <!-- <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fafc;
+      color: #333;
+      text-align: center;
+      margin: 40px;
+    }
 
-    <script src="script.js"></script>
-  </body>
-  </html>
+    h1 {
+      color: #0078d7;
+    }
+
+    #quoteDisplay {
+      margin: 30px auto;
+      padding: 20px;
+      width: 60%;
+      min-height: 80px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+      background-color: #0078d7;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      margin: 5px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+
+    input {
+      padding: 8px;
+      margin: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    #dataControls {
+      margin-top: 16px;
+    }
+  </style> -->
+</head>
+<body>
+  <h1>Dynamic Quote Generator</h1>
+  
+  <!-- Quote Display -->
+  <div id="quoteDisplay"></div>
+  <br>
+  <button id="newQuote">Show New Quote</button>
+  <br><br>
+  <!-- JSON import/export controls -->
+  <div id="dataControls">
+    <button id="exportJson">Export Quotes (JSON)</button>
+    <input type="file" id="importFile" accept=".json" />
+  </div>
+
+  <!-- Add Quote Section -->
+  <div style="margin-top: 25px;">
+    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+    <button onclick="addQuote()">Add Quote</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
