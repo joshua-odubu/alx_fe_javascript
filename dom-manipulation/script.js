@@ -5,7 +5,7 @@
 const LS_QUOTES_KEY = "quotes";
 const LS_CATEGORY_FILTER = "selectedCategory";
 const SS_LAST_INDEX_KEY = "lastViewedQuoteIndex";
-const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // mock server endpoint
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // mock API endpoint
 
 const DEFAULT_QUOTES = [
   { text: "Success is not final; failure is not fatal.", category: "Motivation" },
@@ -154,8 +154,7 @@ function addQuote(text, category) {
   populateCategories();
   notifyUser("✅ Quote added locally!", "success");
 
-  // trigger sync after adding new quote
-  syncQuotes();
+  syncQuotes(); // trigger sync after new quote
 }
 
 // ---------------------------
@@ -220,7 +219,6 @@ function importFromJsonFile(event) {
 // Server Interaction & Sync
 // ---------------------------
 
-// Fetch quotes from mock server
 async function fetchQuotesFromServer() {
   const response = await fetch(SERVER_URL);
   const data = await response.json();
@@ -230,21 +228,6 @@ async function fetchQuotesFromServer() {
   }));
 }
 
-// Push a quote to the server (mock)
-async function pushQuoteToServer(quote) {
-  try {
-    await fetch(SERVER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(quote),
-    });
-    notifyUser("☁️ Quote synced to server.", "success");
-  } catch {
-    notifyUser("⚠️ Failed to push quote to server.", "error");
-  }
-}
-
-// Merge quotes — server wins on conflict
 function mergeServerQuotes(serverQuotes) {
   const localSet = new Set(quotes.map(q => `${q.text}__${q.category}`));
   let added = 0;
@@ -264,23 +247,22 @@ function mergeServerQuotes(serverQuotes) {
   }
 }
 
-// The key function required by ALX
+// Core ALX-required function
 async function syncQuotes() {
   try {
     const serverQuotes = await fetchQuotesFromServer();
     mergeServerQuotes(serverQuotes);
+    console.log("Quotes synced with server!");
+    notifyUser("Quotes synced with server!", "success");
   } catch (e) {
     console.error("Sync failed:", e);
     notifyUser("⚠️ Sync failed. Check connection.", "error");
   }
 }
 
-// ---------------------------
-// Periodic Sync Setup
-// ---------------------------
 function startPeriodicSync() {
   if (syncIntervalId) clearInterval(syncIntervalId);
-  syncIntervalId = setInterval(syncQuotes, 60000); // every 60 seconds
+  syncIntervalId = setInterval(syncQuotes, 60000);
 }
 
 // ---------------------------
@@ -297,6 +279,6 @@ window.onload = function () {
   if (importInput) importInput.addEventListener("change", importFromJsonFile);
   if (categoryFilter) categoryFilter.addEventListener("change", filterQuotes);
 
-  // initial sync call
+  // Initial sync on load
   syncQuotes();
 };
