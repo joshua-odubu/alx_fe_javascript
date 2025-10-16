@@ -150,53 +150,57 @@ function exportToJson() {
 }
 
 // ---------------------------
-// JSON Import
+// JSON Import (FileReader version)
 // ---------------------------
-async function importFromJsonFile(event) {
-  const file = event.target.files && event.target.files[0];
-  if (!file) return;
+function importFromJsonFile(event) {
+  const fileReader = new FileReader();
 
-  try {
-    const text = await file.text();
-    const imported = JSON.parse(text);
+  fileReader.onload = function (e) {
+    try {
+      const importedQuotes = JSON.parse(e.target.result);
 
-    if (!Array.isArray(imported)) {
-      alert("Invalid JSON format. Must be an array of quotes.");
-      return;
-    }
+      if (!Array.isArray(importedQuotes)) {
+        alert("Invalid JSON format: expected an array of quotes.");
+        return;
+      }
 
-    const existingSet = new Set(quotes.map(q => `${q.text}__${q.category}`));
-    let added = 0;
+      // Validate and merge imported quotes
+      const existingSet = new Set(quotes.map(q => `${q.text}__${q.category}`));
+      let added = 0;
 
-    for (const item of imported) {
-      if (isValidQuoteObject(item)) {
-        const key = `${item.text.trim()}__${item.category.trim()}`;
-        if (!existingSet.has(key)) {
-          quotes.push({
-            text: item.text.trim(),
-            category: item.category.trim(),
-          });
-          existingSet.add(key);
-          added++;
+      for (const item of importedQuotes) {
+        if (isValidQuoteObject(item)) {
+          const key = `${item.text.trim()}__${item.category.trim()}`;
+          if (!existingSet.has(key)) {
+            quotes.push({
+              text: item.text.trim(),
+              category: item.category.trim(),
+            });
+            existingSet.add(key);
+            added++;
+          }
         }
       }
-    }
 
-    saveQuotes();
+      saveQuotes();
 
-    if (added > 0) {
-      alert(`✅ Imported ${added} new quote${added === 1 ? "" : "s"} successfully!`);
-      renderQuote(quotes[quotes.length - 1]);
-      sessionStorage.setItem(SS_LAST_INDEX_KEY, String(quotes.length - 1));
-    } else {
-      alert("No new quotes added (duplicates or invalid data).");
+      if (added > 0) {
+        alert(`✅ Imported ${added} new quote${added === 1 ? "" : "s"} successfully!`);
+        renderQuote(quotes[quotes.length - 1]);
+        sessionStorage.setItem(SS_LAST_INDEX_KEY, String(quotes.length - 1));
+      } else {
+        alert("No new quotes added (duplicates or invalid data).");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("❌ Failed to import. Please check your JSON file.");
+    } finally {
+      event.target.value = ""; // reset file input
     }
-  } catch (e) {
-    console.error(e);
-    alert("❌ Failed to import. Please check your JSON file.");
-  } finally {
-    event.target.value = ""; // Reset file input
-  }
+  };
+
+  // Read file content as text
+  fileReader.readAsText(event.target.files[0]);
 }
 
 // ---------------------------
