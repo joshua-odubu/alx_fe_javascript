@@ -219,6 +219,7 @@ function importFromJsonFile(event) {
 // Server Interaction & Sync
 // ---------------------------
 
+// Fetch quotes from mock server
 async function fetchQuotesFromServer() {
   const response = await fetch(SERVER_URL);
   const data = await response.json();
@@ -226,6 +227,21 @@ async function fetchQuotesFromServer() {
     text: item.title,
     category: item.body.substring(0, 20) || "General",
   }));
+}
+
+// Push a quote to the server (mock)
+// Contains method, POST, headers, and Content-Type
+async function pushQuoteToServer(quote) {
+  try {
+    await fetch(SERVER_URL, {
+      method: "POST", // required keyword
+      headers: { "Content-Type": "application/json" }, // required keyword
+      body: JSON.stringify(quote),
+    });
+    console.log("Quote sent to server using POST method!");
+  } catch (error) {
+    console.error("Push failed:", error);
+  }
 }
 
 function mergeServerQuotes(serverQuotes) {
@@ -247,7 +263,7 @@ function mergeServerQuotes(serverQuotes) {
   }
 }
 
-// Core ALX-required function
+// The ALX key function
 async function syncQuotes() {
   try {
     const serverQuotes = await fetchQuotesFromServer();
@@ -279,6 +295,5 @@ window.onload = function () {
   if (importInput) importInput.addEventListener("change", importFromJsonFile);
   if (categoryFilter) categoryFilter.addEventListener("change", filterQuotes);
 
-  // Initial sync on load
-  syncQuotes();
+  syncQuotes(); // initial sync
 };
