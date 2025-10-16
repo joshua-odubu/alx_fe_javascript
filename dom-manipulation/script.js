@@ -5,7 +5,7 @@
 const LS_QUOTES_KEY = "quotes";
 const LS_CATEGORY_FILTER = "selectedCategory";
 const SS_LAST_INDEX_KEY = "lastViewedQuoteIndex";
-const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // mock server
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // mock server endpoint
 
 const DEFAULT_QUOTES = [
   { text: "Success is not final; failure is not fatal.", category: "Motivation" },
@@ -17,14 +17,16 @@ let quotes = [];
 let currentFilter = "all";
 let syncIntervalId = null;
 
-// Cache DOM
+// Cache DOM elements
 const quoteDisplay = document.getElementById("quoteDisplay");
 const newQuoteButton = document.getElementById("newQuote");
 const exportBtn = document.getElementById("exportJson");
 const importInput = document.getElementById("importFile");
 const categoryFilter = document.getElementById("categoryFilter");
 
-// Small helper for user notifications
+// ---------------------------
+// UI Notification Helper
+// ---------------------------
 function notifyUser(message, type = "info") {
   const note = document.createElement("div");
   note.textContent = message;
@@ -33,7 +35,8 @@ function notifyUser(message, type = "info") {
   note.style.left = "50%";
   note.style.transform = "translateX(-50%)";
   note.style.padding = "10px 15px";
-  note.style.backgroundColor = type === "error" ? "#d9534f" : type === "success" ? "#5cb85c" : "#0275d8";
+  note.style.backgroundColor =
+    type === "error" ? "#d9534f" : type === "success" ? "#5cb85c" : "#0275d8";
   note.style.color = "white";
   note.style.borderRadius = "4px";
   note.style.zIndex = 9999;
@@ -42,17 +45,24 @@ function notifyUser(message, type = "info") {
 }
 
 // ---------------------------
-// Validation / Storage
+// Local Storage Management
 // ---------------------------
 function isValidQuoteObject(obj) {
-  return obj && typeof obj.text === "string" && obj.text.trim() && typeof obj.category === "string" && obj.category.trim();
+  return (
+    obj &&
+    typeof obj.text === "string" &&
+    obj.text.trim() &&
+    typeof obj.category === "string" &&
+    obj.category.trim()
+  );
 }
 
 function loadQuotes() {
   try {
     const stored = localStorage.getItem(LS_QUOTES_KEY);
     quotes = stored ? JSON.parse(stored) : [...DEFAULT_QUOTES];
-    if (!Array.isArray(quotes) || !quotes.every(isValidQuoteObject)) quotes = [...DEFAULT_QUOTES];
+    if (!Array.isArray(quotes) || !quotes.every(isValidQuoteObject))
+      quotes = [...DEFAULT_QUOTES];
     saveQuotes();
   } catch {
     quotes = [...DEFAULT_QUOTES];
@@ -65,11 +75,12 @@ function saveQuotes() {
 }
 
 // ---------------------------
-// UI Helpers
+// UI Rendering + Filtering
 // ---------------------------
 function populateCategories() {
   const categories = [...new Set(quotes.map(q => q.category))];
   categoryFilter.innerHTML = `<option value="all">All Categories</option>`;
+
   categories.forEach(cat => {
     const option = document.createElement("option");
     option.value = cat;
@@ -99,7 +110,10 @@ function renderQuote(quote) {
 }
 
 function showRandomQuote() {
-  const filtered = currentFilter === "all" ? quotes : quotes.filter(q => q.category === currentFilter);
+  const filtered =
+    currentFilter === "all"
+      ? quotes
+      : quotes.filter(q => q.category === currentFilter);
   if (!filtered.length) {
     quoteDisplay.textContent = "No quotes in this category.";
     return;
@@ -139,11 +153,13 @@ function addQuote(text, category) {
   saveQuotes();
   populateCategories();
   notifyUser("✅ Quote added locally!", "success");
-  pushQuoteToServer({ text: cleanedText, category: cleanedCat });
+
+  // trigger sync after adding new quote
+  syncQuotes();
 }
 
 // ---------------------------
-// JSON Export / Import
+// JSON Import / Export
 // ---------------------------
 function exportToJson() {
   try {
@@ -176,7 +192,10 @@ function importFromJsonFile(event) {
         if (isValidQuoteObject(item)) {
           const key = `${item.text.trim()}__${item.category.trim()}`;
           if (!existingSet.has(key)) {
-            quotes.push({ text: item.text.trim(), category: item.category.trim() });
+            quotes.push({
+              text: item.text.trim(),
+              category: item.category.trim(),
+            });
             existingSet.add(key);
             added++;
           }
@@ -198,48 +217,20 @@ function importFromJsonFile(event) {
 }
 
 // ---------------------------
-// Server Sync Simulation
+// Server Interaction & Sync
 // ---------------------------
 
-// Fetch quotes from server
+// Fetch quotes from mock server
 async function fetchQuotesFromServer() {
-  try {
-    const response = await fetch(SERVER_URL);
-    const data = await response.json();
-    // Simulate server quote structure
-    const serverQuotes = data.slice(0, 5).map(item => ({
-      text: item.title,
-      category: item.body.substring(0, 20) || "General",
-    }));
-
-    mergeServerQuotes(serverQuotes);
-  } catch (error) {
-    console.error("Server fetch failed:", error);
-    notifyUser("⚠️ Unable to sync with server.", "error");
-  }
+  const response = await fetch(SERVER_URL);
+  const data = await response.json();
+  return data.slice(0, 5).map(item => ({
+    text: item.title,
+    category: item.body.substring(0, 20) || "General",
+  }));
 }
 
-// Merge logic: server wins
-function mergeServerQuotes(serverQuotes) {
-  const localSet = new Set(quotes.map(q => `${q.text}__${q.category}`));
-  let updated = 0;
-
-  serverQuotes.forEach(serverQ => {
-    const key = `${serverQ.text}__${serverQ.category}`;
-    if (!localSet.has(key)) {
-      quotes.push(serverQ);
-      updated++;
-    }
-  });
-
-  if (updated > 0) {
-    saveQuotes();
-    populateCategories();
-    notifyUser(`🔄 Synced ${updated} new quote(s) from server.`, "info");
-  }
-}
-
-// Push new quote to server (simulation)
+// Push a quote to the server (mock)
 async function pushQuoteToServer(quote) {
   try {
     await fetch(SERVER_URL, {
@@ -248,16 +239,48 @@ async function pushQuoteToServer(quote) {
       body: JSON.stringify(quote),
     });
     notifyUser("☁️ Quote synced to server.", "success");
-  } catch (error) {
-    console.error(error);
+  } catch {
     notifyUser("⚠️ Failed to push quote to server.", "error");
   }
 }
 
-// Periodic sync every 60s
+// Merge quotes — server wins on conflict
+function mergeServerQuotes(serverQuotes) {
+  const localSet = new Set(quotes.map(q => `${q.text}__${q.category}`));
+  let added = 0;
+
+  serverQuotes.forEach(serverQ => {
+    const key = `${serverQ.text}__${serverQ.category}`;
+    if (!localSet.has(key)) {
+      quotes.push(serverQ);
+      added++;
+    }
+  });
+
+  if (added > 0) {
+    saveQuotes();
+    populateCategories();
+    notifyUser(`🔄 Synced ${added} new quote(s) from server.`, "info");
+  }
+}
+
+// The key function required by ALX
+async function syncQuotes() {
+  try {
+    const serverQuotes = await fetchQuotesFromServer();
+    mergeServerQuotes(serverQuotes);
+  } catch (e) {
+    console.error("Sync failed:", e);
+    notifyUser("⚠️ Sync failed. Check connection.", "error");
+  }
+}
+
+// ---------------------------
+// Periodic Sync Setup
+// ---------------------------
 function startPeriodicSync() {
   if (syncIntervalId) clearInterval(syncIntervalId);
-  syncIntervalId = setInterval(fetchQuotesFromServer, 60000);
+  syncIntervalId = setInterval(syncQuotes, 60000); // every 60 seconds
 }
 
 // ---------------------------
@@ -274,5 +297,6 @@ window.onload = function () {
   if (importInput) importInput.addEventListener("change", importFromJsonFile);
   if (categoryFilter) categoryFilter.addEventListener("change", filterQuotes);
 
-  fetchQuotesFromServer(); // initial sync
+  // initial sync call
+  syncQuotes();
 };
