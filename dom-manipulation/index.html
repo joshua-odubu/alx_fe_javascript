@@ -55,26 +55,36 @@
   </style> -->
 </head>
 <body>
-  <h1>Dynamic Quote Generator</h1>
-  
+    <h1>Dynamic Quote Generator</h1>
+
   <!-- Quote Display -->
-  <div id="quoteDisplay"></div>
-  <br>
-  <button id="newQuote">Show New Quote</button>
-  <br><br>
-  <!-- JSON import/export controls -->
-  <div id="dataControls">
-    <button id="exportJson">Export Quotes (JSON)</button>
-    <input type="file" id="importFile" accept=".json" />
-  </div>
+    <div id="quoteDisplay"></div>
 
-  <!-- Add Quote Section -->
-  <div style="margin-top: 25px;">
-    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-    <button onclick="addQuote()">Add Quote</button>
-  </div>
+    <!-- Category Filter -->
+    <div style="margin: 15px 0;">
+      <label for="categoryFilter"><strong>Filter by Category:</strong></label>
+      <select id="categoryFilter" onchange="filterQuotes()">
+        <option value="all">All Categories</option>
+        <!-- Dynamically populated options -->
+      </select>
+    </div>
 
-  <script src="script.js"></script>
+    <!-- Buttons -->
+    <button id="newQuote">Show New Quote</button>
+
+    <!-- JSON Controls -->
+    <div id="dataControls" style="margin-top: 16px;">
+      <button id="exportJson">Export Quotes (JSON)</button>
+      <input type="file" id="importFile" accept=".json" />
+    </div>
+
+    <!-- Add New Quote -->
+    <div style="margin-top: 25px;">
+      <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+      <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+      <button onclick="addQuote()">Add Quote</button>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
