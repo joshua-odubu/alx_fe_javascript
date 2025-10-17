@@ -50,23 +50,22 @@ method: "POST",
 headers: { "Content-Type": "application/json" }
 
 
-	•	Conflict-resolution strategy: server data takes precedence (“server wins”).
-	•	Displays real-time toast notifications with notifyUser().
-	•	Runs automatic sync every 60 seconds.
-	•	Logs "Quotes synced with server!" in the console after successful sync.
+	•	Conflict resolution strategy: server data takes precedence (“server wins”).
+	•	Real-time notifications with visual toasts (notifyUser()).
+	•	Periodic auto-sync every 60 seconds.
+	•	Console message "Quotes synced with server!" confirms successful syncs.
 
 
-🏗️ Project Structure
+🧩 Core Technologies
 
-alx_fe_javascript/
-└── dom-manipulation/
-    ├── index.html
-    ├── script.js
-    └── README.md
+Technology	Purpose
+HTML 5	Page structure and placeholders
+CSS 3	Minimal UI styling
+JavaScript (ES6)	Logic, DOM manipulation, data persistence
+Web Storage API	Local & Session storage
+JSON API	Import/export and mock server data
+Fetch API	HTTP GET & POST requests to mock server
 
-	•	index.html — Base structure and placeholders for dynamic content.
-	•	script.js — Core logic handling DOM updates, storage, filtering, and server sync.
-	•	README.md — Documentation outlining learning outcomes and functionality.
 
 
 ⚙️ How to Run Locally
@@ -79,32 +78,23 @@ cd alx_fe_javascript/dom-manipulation
 	2.	Open index.html in your browser
         The application runs entirely client-side — no backend setup required.
 	3.	Interact with the app
-	•	Click “Show New Quote” to display random quotes.
-	•	Use the category filter to view specific groups.
-	•	Add new quotes and categories using the input fields.
-	•	Import/export JSON files to manage saved data.
-	•	Observe background sync logs and toast notifications while connected to the mock API.
+	•	Click “Show New Quote” to get a random quote.
+	•	Use the category filter to view specific categories.
+	•	Add your own quotes and export/import JSON files.
+	•	Observe background sync logs and toasts when connecting to the mock API.
 
-
-🧠 JavaScript Concepts Used
-	•	DOM Selection & Manipulation: getElementById, createElement, appendChild
-	•	Event Handling: addEventListener()
-	•	Array Logic: push(), filter(), random index generation
-	•	Web Storage: localStorage, sessionStorage
-	•	File API: FileReader, readAsText()
-	•	Fetch API: GET and POST requests with method, headers, Content-Type
-	•	Error Handling & User Feedback: try/catch blocks and custom toast alerts
 
 
 🧪 Testing Checklist
 
-✅ Displays random quotes using Math.random()
-✅ Persists quotes via Local Storage
-✅ Imports/exports JSON files successfully
-✅ Updates category filter dynamically
-✅ Synchronizes with mock server using syncQuotes()
-✅ Includes method, POST, headers, and Content-Type in requests
-✅ Logs “Quotes synced with server!” on successful sync
+✅ Random quote display uses Math.random()
+✅ Quotes persist after refresh (Local Storage)
+✅ JSON import/export works with FileReader and readAsText()
+✅ Category filter updates dynamically
+✅ syncQuotes() fetches and merges server data
+✅ method, POST, headers, and Content-Type appear in POST requests
+✅ Console shows “Quotes synced with server!” after each sync
+
 
 
 🏁 Learning Outcomes
