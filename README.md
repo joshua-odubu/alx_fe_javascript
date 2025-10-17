@@ -1,73 +1,105 @@
-# Dynamic Quote Generator
+🧠 Dynamic Quote Generator
 
-## 📖 Project Overview
-The **Dynamic Quote Generator** is a JavaScript web application that demonstrates **advanced DOM manipulation** by dynamically generating and managing content on a web page. Users can view random quotes, add new quotes with categories, and see the updates reflected instantly — all without using any external frameworks.
+Directory: alx_fe_javascript/dom-manipulation
+Repository: alx_fe_javascript
 
-This project was created as part of the **ALX Front-End Engineering Program** (DOM Manipulation module).
 
----
+📋 Project Overview
 
-## 🎯 Learning Objectives
-By completing this project, you will:
-- Understand and apply **advanced DOM manipulation techniques**.
-- Dynamically create, modify, and append HTML elements using JavaScript.
-- Manage data within JavaScript objects and arrays.
-- Handle user input and interactive events.
-- Update the webpage dynamically without reloading.
+The Dynamic Quote Generator demonstrates advanced DOM manipulation, Web Storage, JSON handling, and client–server synchronization using vanilla JavaScript.
+Each task progressively enhances the app from a static quote display into an interactive, network-aware web application that mimics real-world data syncing and conflict resolution.
 
----
 
-## 🧩 Features
-- Displays a **random quote** each time the “Show New Quote” button is clicked.  
-- Allows users to **add new quotes and categories** dynamically through an input form.  
-- Updates both the **DOM** and **JavaScript data structure** in real-time.  
-- Demonstrates **clean, modular JavaScript functions** (`showRandomQuote()`, `addQuote()`, etc.).
+🚀 Features by Task
 
----
+Task 0 – Building a Dynamic Content Generator
+	•	Created dynamic HTML content entirely through JavaScript DOM APIs.
+	•	Displayed random quotes from an in-memory array.
+	•	Implemented showRandomQuote() using Math.random() for randomized output.
 
-## 🏗️ Project Structure
-alx_fe_javascript/
-└── dom-manipulation/
-├── index.html
-└── script.js
+Task 1 – Implementing Web Storage and JSON Handling
+	•	Integrated Local Storage to persist quotes across sessions.
+	•	Used Session Storage to remember the last displayed quote.
+	•	Implemented JSON import/export with:
+	•	FileReader + readAsText() for file uploads.
+	•	Blob + URL.createObjectURL() for JSON downloads.
 
-- **index.html** — Provides the base structure and placeholders for dynamic content.  
-- **script.js** — Handles all DOM manipulation logic and user interactions.
+Task 2 – Creating a Dynamic Content Filtering System
+	•	Added a category filter (<select>) dynamically populated from stored quotes.
+	•	Implemented populateCategories() and filterQuotes() for real-time filtering.
+	•	Persisted the user’s last selected filter using Local Storage.
+	•	Automatically updated categories when new quotes were added or imported.
 
----
+Task 3 – Syncing Data with Server and Conflict Resolution
+	•	Introduced server simulation using the mock API https://jsonplaceholder.typicode.com/posts.
+	•	Implemented two-way data syncing via syncQuotes():
+	•	Fetches new quotes from the server (GET).
+	•	Pushes local quotes to the server using fetch() with:
 
-## ⚙️ How It Works
-1. The page displays a random quote on load.
-2. Clicking **“Show New Quote”** fetches a new random quote from the in-memory `quotes` array.
-3. Users can add a new quote and category through the input form.
-4. When added, the new quote becomes part of the available list — visible immediately in the app.
+method: "POST",
+headers: { "Content-Type": "application/json" }
 
----
 
-## 🚀 How to Run the Project
-1. Clone or download the repository.
-2. Navigate to the `dom-manipulation` directory.
-3. Open `index.html` in your preferred browser.
-4. Interact with the quote generator — add quotes, switch quotes, explore the DOM in action.
+	•	Conflict resolution strategy: server data takes precedence (“server wins”).
+	•	Real-time notifications with visual toasts (notifyUser()).
+	•	Periodic auto-sync every 60 seconds.
+	•	Console message "Quotes synced with server!" confirms successful syncs.
 
----
 
-## 🧠 JavaScript Concepts Used
-- **DOM Selection:** `getElementById`, `createElement`, `appendChild`
-- **Event Handling:** `addEventListener()`
-- **Array Manipulation:** `push()`, random index generation
-- **Dynamic Element Creation:** building input forms and text nodes in real-time
+🧩 Core Technologies
 
----
+Technology	Purpose
+HTML 5	Page structure and placeholders
+CSS 3	Minimal UI styling
+JavaScript (ES6)	Logic, DOM manipulation, data persistence
+Web Storage API	Local & Session storage
+JSON API	Import/export and mock server data
+Fetch API	HTTP GET & POST requests to mock server
 
-## 🧪 Optional Enhancement (Bonus)
-For extended functionality, you can integrate **Web Storage (localStorage)** to persist user-added quotes across browser sessions.
 
-Example snippet:
-```js
-// Save quotes
-localStorage.setItem("quotes", JSON.stringify(quotes));
 
-// Load quotes
-const savedQuotes = JSON.parse(localStorage.getItem("quotes"));
-if (savedQuotes) quotes = savedQuotes;
+⚙️ How to Run Locally
+	1.	Clone the repository
+
+git clone https://github.com/joshua-odubu/alx_fe_javascript.git
+cd alx_fe_javascript/dom-manipulation
+
+
+	2.	Open index.html in your browser
+        The app runs entirely client-side — no server setup required.
+	3.	Interact with the app
+	•	Click “Show New Quote” to get a random quote.
+	•	Use the category filter to view specific categories.
+	•	Add your own quotes and export/import JSON files.
+	•	Observe background sync logs and toasts when connecting to the mock API.
+
+
+
+🧪 Testing Checklist
+
+✅ Random quote display uses Math.random()
+✅ Quotes persist after refresh (Local Storage)
+✅ JSON import/export works with FileReader and readAsText()
+✅ Category filter updates dynamically
+✅ syncQuotes() fetches and merges server data
+✅ method, POST, headers, and Content-Type appear in POST requests
+✅ Console shows “Quotes synced with server!” after each sync
+
+
+
+🏁 Learning Outcomes
+
+By completing this project you learned how to:
+	•	Manipulate the DOM dynamically without frameworks.
+	•	Persist data with Local and Session Storage.
+	•	Work with JSON data and files.
+	•	Simulate real-world client/server syncing.
+	•	Implement basic conflict resolution and user feedback systems.
+
+
+✨ Author
+
+Name: Joshua Odubu
+Cohort: ALX Frontend Engineering Program
+Module: JavaScript – DOM Manipulation
+
