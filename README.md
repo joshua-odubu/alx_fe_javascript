@@ -57,7 +57,6 @@ JSON API	Import/export and mock server data
 Fetch API	HTTP GET & POST requests to mock server
 
 
-
 ⚙️ How to Run Locally
 	1.	Clone the repository
 
@@ -74,7 +73,6 @@ cd alx_fe_javascript/dom-manipulation
 	•	Observe background sync logs and toasts when connecting to the mock API.
 
 
-
 🧪 Testing Checklist
 
 ✅ Random quote display uses Math.random()
@@ -84,7 +82,6 @@ cd alx_fe_javascript/dom-manipulation
 ✅ syncQuotes() fetches and merges server data
 ✅ method, POST, headers, and Content-Type appear in POST requests
 ✅ Console shows “Quotes synced with server!” after each sync
-
 
 
 🏁 Learning Outcomes
